@@ -10,10 +10,10 @@
 
                 <ul>
                     <li>
-                        <button class="pure-button pure-button-primary">New Baby</button>
+                        <button type="button" ng-click="newChild()" class="pure-button pure-button-primary">New Baby</button>
                     </li>
                     <li ng-repeat="baby in babies">
-                        <a href="#">{{baby.name}} ({{baby.dob}})</a>
+                        <a ng-click="selectChild(baby.id)">{{baby.name}} ({{baby.dob}})</a>
                     </li>
                     
                 </ul>
@@ -23,21 +23,21 @@
 
         <div class="pure-u-3-4">
             <div class="baby-details">
-                <form class="pure-form pure-form-stacked">
+                <form class="pure-form pure-form-stacked" ng-submit="saveChild()">
                     <fieldset>
                         <legend>Baby Form</legend>
 
                         <label for="name">Name</label>
-                        <input id="name" type="text" placeholder="Name" ng-model="">
+                        <input id="name" type="text" placeholder="Name" ng-model="baby.name" required>
 
                         <label for="dob">DOB</label>
-                        <input id="dob" type="text" placeholder="DOB">
+                        <input id="dob" type="date" placeholder="DOB" ng-model="baby.dob" required>
 
                         <label for="interval">Feed every (mins)</label>
-                        <input id="interval" type="text" placeholder="mins">
+                        <input id="interval" type="number" placeholder="mins" ng-model="baby.interval" required>
 
                         <label for="remind_interval">Remind me to stop after (mins)</label>
-                        <input id="remind_interval" type="text" placeholder="mins">
+                        <input id="remind_interval" type="number" placeholder="mins" ng-model="baby.remind_interval" required>
 
                         <button type="submit" class="pure-button pure-button-submit">Save</button>
                     </fieldset>

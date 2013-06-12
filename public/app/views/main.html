@@ -1,0 +1,48 @@
+<div class="container">
+    <h1>Glass Baby Log</h1>
+
+    <div class="pure-g">
+
+        <div class="pure-u-1-4">
+
+            <div class="pure-menu pure-menu-open baby-menu">
+                <a class="pure-menu-heading">Babies</a>
+
+                <ul>
+                    <li>
+                        <button class="pure-button pure-button-primary">New Baby</button>
+                    </li>
+                    <li ng-repeat="baby in babies">
+                        <a href="#">{{baby.name}} ({{baby.dob}})</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="pure-u-3-4">
+            <div class="baby-details">
+                <form class="pure-form pure-form-stacked">
+                    <fieldset>
+                        <legend>Baby Form</legend>
+
+                        <label for="name">Name</label>
+                        <input id="name" type="text" placeholder="Name" ng-model="">
+
+                        <label for="dob">DOB</label>
+                        <input id="dob" type="text" placeholder="DOB">
+
+                        <label for="interval">Feed every (mins)</label>
+                        <input id="interval" type="text" placeholder="mins">
+
+                        <label for="remind_interval">Remind me to stop after (mins)</label>
+                        <input id="remind_interval" type="text" placeholder="mins">
+
+                        <button type="submit" class="pure-button pure-button-submit">Save</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

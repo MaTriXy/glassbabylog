@@ -1,0 +1,23 @@
+/* Will be compiled down to a single stylesheet with your sass files */
+body {
+    background-image: url(/images/bg.jpg);
+}
+
+.container {
+    background-color: papayaWhip;
+    border-radius: 5px;
+    opacity: 0.85;
+}
+
+.baby-menu {
+    text-align: center;
+}
+
+.baby-details {
+    margin: 0px 30px;
+}
+
+.pure-button-submit {
+    color: white;
+    background: rgb(76, 201, 71); /* this is a green */
+}

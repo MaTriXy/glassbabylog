@@ -1,0 +1,20 @@
+application: glassbabylog
+version: 1
+runtime: php
+api_version: 1
+
+handlers:
+- url: /api.*
+  script: public/index.php
+- url: /components
+  static_dir: public/app/components
+- url: /images
+  static_dir: public/app/images
+- url: /scripts
+  static_dir: public/app/scripts
+- url: /styles
+  static_dir: public/app/styles
+- url: /views
+  static_dir: public/app/views
+- url: /.*
+  script: public/app/index.html

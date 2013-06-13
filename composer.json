@@ -1,14 +1,17 @@
 {
-    "name": "zendframework/skeleton-application",
-    "description": "Skeleton Application for ZF2",
+    "name": "alexdennis/glassbabylog",
+    "description": "This is a simple application to schedule your baby's feeding, sleeping, pooping, etc.",
     "license": "BSD-3-Clause",
     "keywords": [
         "framework",
-        "zf2"
+        "zf2",
+        "mirror-api",
+        "glassware"
     ],
-    "homepage": "http://framework.zend.com/",
+    "homepage": "https://github.com/alexdennis/glassbabylog",
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": ">2.2.0rc1"
+        "zendframework/zendframework": ">2.2.0rc1",
+        "google/api-client": "dev-master"
     }
 }

@@ -30,7 +30,7 @@ class IndexController extends AbstractActionController
         session_start();
 
         $client = new \Google_Client();
-        $client->setApplicationName("Google+ PHP Starter Application");
+        $client->setApplicationName("glassbabylog");
 
         // Visit https://code.google.com/apis/console?api=plus to generate your
         // client id, client secret, and to register your redirect uri.
@@ -89,6 +89,62 @@ class IndexController extends AbstractActionController
         return new ViewModel(array(
           'CLIENT_ID' => $this->config['client_id']
         ));
+    }
+
+    public function storeTokenAction()
+    {
+      session_start();
+      $client = new \Google_Client();
+      $client->setApplicationName("glassbabylog");
+
+      // Visit https://code.google.com/apis/console?api=plus to generate your
+      // client id, client secret, and to register your redirect uri.
+      $client->setClientId($this->config['client_id']);
+      $client->setClientSecret($this->config['client_secret']);
+      $client->setRedirectUri($this->config['redirect_uri']);
+      $client->setDeveloperKey($this->config['developer_key']);
+      $plus = new \Google_PlusService($client);
+
+      $request = $this->getRequest();
+      $code = $request->getContent();
+      // $gPlusId = $request->get['gplus_id'];
+      // Exchange the OAuth 2.0 authorization code for user credentials.
+      $client->authenticate($code);
+
+      $token = json_decode($client->getAccessToken());
+      var_dump($token);
+      exit;
+      // Verify the token
+      $reqUrl = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=' .
+              $token->access_token;
+      $req = new Google_HttpRequest($reqUrl);
+
+      $tokenInfo = json_decode(
+          $client::getIo()->authenticatedRequest($req)->getResponseBody());
+
+      // If there was an error in the token info, abort.
+      if ($tokenInfo->error) {
+        $this->getResponse()->setStatusCode(500);
+        $this->getResponse()->setContent($tokenInfo->error);
+        return;
+        // return new Response($tokenInfo->error, 500);
+      }
+      // Make sure the token we got is for the intended user.
+      // if ($tokenInfo->userid != $gPlusId) {
+      //   return new Response(
+      //       "Token's user ID doesn't match given user ID", 401);
+      // }
+      // Make sure the token we got is for our app.
+      if ($tokenInfo->audience != $this->config['client_id']) {
+        $this->getResponse()->setStatusCode(401);
+        $this->getResponse()->setContent("Token's client ID does not match app's.");
+        return;
+      }
+
+      // Store the token in the session for later use.
+      // $app['session']->set('token', json_encode($token));
+      $_SESSION['token'] = json_encode($token);
+      $this->getResponse()->setContent('Succesfully connected with token: ' . print_r($token, true));
     }
 
     public function listAction()

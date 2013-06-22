@@ -10,17 +10,17 @@ handlers:
 - url: /logo\.png.*
   static_files: public/img/logo.png
   upload: public/img/logo\.png
-- url: /api.*
-  script: public/index.php
-- url: /components
+- url: /app/components
   static_dir: public/app/components
-- url: /images
+- url: /app/images
   static_dir: public/app/images
-- url: /scripts
+- url: /app/scripts
   static_dir: public/app/scripts
-- url: /styles
+- url: /app/styles
   static_dir: public/app/styles
-- url: /views
+- url: /app/views
   static_dir: public/app/views
-- url: /.*
+- url: /app/.*
   script: public/app/index.html
+- url: /.*
+  script: public/index.php

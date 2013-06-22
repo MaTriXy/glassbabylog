@@ -10,25 +10,34 @@
 namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Application\ConfigAwareInterface;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Zend\Json\Json;
 
 class IndexController extends AbstractActionController
+  implements ConfigAwareInterface
 {
+    protected $config;
+ 
+    public function setConfig($config)
+    {
+        $this->config = $config;
+    }
+
     public function indexAction()
     {
         session_start();
-        
+
         $client = new \Google_Client();
         $client->setApplicationName("Google+ PHP Starter Application");
 
         // Visit https://code.google.com/apis/console?api=plus to generate your
         // client id, client secret, and to register your redirect uri.
-        // $client->setClientId('insert_your_oauth2_client_id');
-        // $client->setClientSecret('insert_your_oauth2_client_secret');
-        $client->setRedirectUri('http://localhost:9080/');
-        $client->setDeveloperKey('AIzaSyAxO_PIo2si_qh5Z-_BgWmmazc-QkJniBo');
+        $client->setClientId($this->config['client_id']);
+        $client->setClientSecret($this->config['client_secret']);
+        $client->setRedirectUri($this->config['redirect_uri']);
+        $client->setDeveloperKey($this->config['developer_key']);
         $plus = new \Google_PlusService($client);
 
         if (isset($_GET['logout'])) {
@@ -77,6 +86,13 @@ class IndexController extends AbstractActionController
           print "<a class='login' href='$authUrl'>Connect Me!</a>";
         }
 
+        return new ViewModel(array(
+          'CLIENT_ID' => $this->config['client_id']
+        ));
+    }
+
+    public function listAction()
+    {
         $class = new \ReflectionClass($this);
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
         $api = [];
@@ -98,7 +114,7 @@ class IndexController extends AbstractActionController
 
         return new ViewModel(array(
             'methods' => $api
-        ));        
+        ));
     }
 
     public function babiesAction()

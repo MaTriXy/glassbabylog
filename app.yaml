@@ -28,5 +28,7 @@ handlers:
   static_dir: public/img
 - url: /js
   static_dir: public/js
+- url: /phpinfo
+  script: phpinfo.php
 - url: /.*
   script: public/index.php

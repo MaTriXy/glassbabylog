@@ -47,6 +47,10 @@ class Module
                         $config  = $locator->get('Config');
                         $instance->setConfig($config['application']);
                     }
+
+                    if ($instance instanceof SessionAwareInterface) {
+                        $instance->setSession(new \Zend\Session\Container('glassbabylog'));
+                    }
                 }
             )
         );

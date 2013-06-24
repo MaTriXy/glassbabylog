@@ -11,18 +11,25 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Application\ConfigAwareInterface;
+use Application\SessionAwareInterface;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Zend\Json\Json;
 
 class IndexController extends AbstractActionController
-  implements ConfigAwareInterface
+  implements ConfigAwareInterface, SessionAwareInterface
 {
     protected $config;
+    protected $session;
  
     public function setConfig($config)
     {
         $this->config = $config;
+    }
+
+    public function setSession(\Zend\Session\Container $session)
+    {
+        $this->session = $session;
     }
 
     protected function getGoogleClient()
@@ -41,10 +48,8 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
-        session_start();
-
         $state = md5(rand());
-        $_SESSION['state'] = $state;
+        $this->session->state = $state;
 
         return new ViewModel(array(
           'CLIENT_ID' => $this->config['client_id'],
@@ -58,14 +63,12 @@ class IndexController extends AbstractActionController
     // Example URI: /connect?state=...&gplus_id=...
     public function connectAction() 
     {
-        session_start();
-
-        $token = $_SESSION['token'];
+        $token = $this->session->token;
         if(empty($token)) {
 
           // Ensure that this is no request forgery going on, and that the user
           // sending us this connect request is the user that was supposed to.
-          if ($this->getRequest()->getQuery('state') != $_SESSION['state']) {
+          if ($this->getRequest()->getQuery('state') != $this->session->state) {
             $this->getResponse()->setStatusCode(401);   
             $this->getResponse()->setContent('Invalid state parameter');
             return $this->getResponse();
@@ -92,7 +95,7 @@ class IndexController extends AbstractActionController
           $gplus_id = $attributes["payload"]["sub"];
 
           // Store the token in the session for later use.
-          $_SESSION['token'] = json_encode($token);
+          $this->session->token = json_encode($token);
           $response = 'Successfully connected with token: ' . print_r($token, true);
         }
 
@@ -103,13 +106,11 @@ class IndexController extends AbstractActionController
     // Get list of people user has shared with this app.
     public function peopleAction()
     {
-        session_start();
-
         $client = $this->getGoogleClient();
 
         $plus = new \Google_PlusService($client);
 
-        $token = $_SESSION['token'];
+        $token = $this->session->token;
         if (empty($token)) {
             $this->getResponse()->setStatusCode(401);
             return $this->getResponse();
@@ -123,15 +124,13 @@ class IndexController extends AbstractActionController
 
     public function disconnectAction()
     {
-        session_start();
-
         $client = $this->getGoogleClient();
 
-        $token = json_decode($_SESSION['token'])->access_token;
+        $token = json_decode($this->session->token)->access_token;
         $client->revokeToken($token);
 
         // Remove the credentials from the user's session.
-        $_SESSION['token'] = '';
+        $this->session->token = '';
         $this->getResponse()->setContent('Successfully disconnected');
         return $this->getResponse();
     }

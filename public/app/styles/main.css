@@ -1,6 +1,6 @@
 /* Will be compiled down to a single stylesheet with your sass files */
 body {
-    background-image: url(/images/bg.jpg);
+    background-image: url(/app/images/bg.jpg);
 }
 
 .container {
